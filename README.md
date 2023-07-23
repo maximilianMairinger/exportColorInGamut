@@ -10,7 +10,7 @@ When working in a wider color gamut (like the display of a modern macbook, suppo
 
 ## Usage
 
-Install it on the [figma community](https://www.figma.com/community/plugins) and try it out [here](https://www.figma.com/file/CB5B3pqUGaa2A4hTMEfeAv/Playground-color-gamut?type=whiteboard&node-id=0%3A1&t=pVLNRCm9OHaCRqaX-1). 
+Install it on the [figma community](https://www.figma.com/community/plugins) and try it out [here](https://www.figma.com/file/mxk7FRei6FQsQsLk23W94q/Color-gamut-playground?type=design&node-id=0%3A1&mode=design&t=jKFMrKU2e6eQf7YB-1). 
 
 Select a any element, and run the plugin. A string like the following will be copied to your clipboard:
 
