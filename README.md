@@ -1,6 +1,6 @@
 <h1> <img src="pics/icon.png" style="display: inline-block; height: .95em; margin-right: 5px; margin-bottom: -5px"/> Figma/Figjam export color in correct gamut</h1>
 
-![Flowchart to JSON Illustration](pics/header.png)
+![Flowchart to JSON Illustration](pics/banner.png)
 
 > Note: This plugin is aimed at developers/designers working with a environment/monitor that supports a color space with a wider gamut than sRGB. Figma running in a browser is limited to sRGB currently, however the desktop app supports the option to use the native OS one. You may need to enable this in the settings under: `Figma > Preferences > Color Space > Unmanaged`.
 
@@ -22,3 +22,5 @@ background: color(display-p3 0.6583 0.1125 0.1125);
 ## Limitations
 
 Gradient fills and opacity are not supported yet. If you need them, please write me / submit a issue and I will try to add this feature.
+
+This plugin is intentionally only concerned with filled colors (text, strokes, background...) editable in figma. If you want to export an asset in the correct color space please refer to [Export PNG with Color Profile](https://www.figma.com/community/plugin/867977941678289774/Export-PNG-with-Color-Profile)
