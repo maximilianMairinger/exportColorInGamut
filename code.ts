@@ -36,6 +36,7 @@ const ui = {
       if ("fills" in elem && "color" in (elem as any).fills[0]) {
         if ((elem as any).fills[0].type === "SOLID") {
           const color = (elem as any).fills[0].color;
+
           console.log(color)
           try {
             const stringified = gamutConversion(`${color.r} ${color.g} ${color.b}`)
@@ -44,7 +45,6 @@ const ui = {
           catch(e) {
             console.error(e)
             await ui.error("Failed at color gamut conversion")
-            return
           }
           
           
@@ -80,7 +80,6 @@ const ui = {
         catch(e) {
           console.error(e)
           await ui.error("Failed at color gamut conversion")
-          return
         }
       }
       else {
