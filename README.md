@@ -21,4 +21,4 @@ background: color(display-p3 0.6583 0.1125 0.1125);
 
 ## Limitations
 
-Gradient fills are not supported yet. If you need them, please write me / submit a issue and I will try to add this feature.
+Gradient fills and opacity are not supported yet. If you need them, please write me / submit a issue and I will try to add this feature.
