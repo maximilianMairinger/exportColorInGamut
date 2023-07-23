@@ -37,9 +37,18 @@ const ui = {
         if ((elem as any).fills[0].type === "SOLID") {
           const color = (elem as any).fills[0].color;
           console.log(color)
-          const stringified = gamutConversion(`${color.r} ${color.g} ${color.b}`)
+          try {
+            const stringified = gamutConversion(`${color.r} ${color.g} ${color.b}`)
+            await copyText(stringified)
+          } 
+          catch(e) {
+            console.error(e)
+            await ui.error("Failed at color gamut conversion")
+            return
+          }
           
-          await copyText(stringified)
+          
+          
         }
         else {
           await ui.error("Please select a node with a solid fill")
@@ -64,10 +73,15 @@ const ui = {
       if ("fills" in elem && "color" in (elem as any).fills[0]) {
         const color = (elem as any).fills[0].color;
         console.log(color)
-        const stringified = gamutConversion(`${color.r} ${color.g} ${color.b}`)
-
-        
-        await copyText(stringified)
+        try {
+          const stringified = gamutConversion(`${color.r} ${color.g} ${color.b}`)
+          await copyText(stringified)
+        } 
+        catch(e) {
+          console.error(e)
+          await ui.error("Failed at color gamut conversion")
+          return
+        }
       }
       else {
         await ui.error("Please select a node with a fill")
