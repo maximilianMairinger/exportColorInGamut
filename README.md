@@ -1,40 +1,24 @@
-Below are the steps to get your plugin running. You can also find instructions at:
+<h1> <img src="pics/icon.png" style="display: inline-block; height: .95em; margin-right: 5px; margin-bottom: -5px"/> Figma/Figjam export color in correct gamut</h1>
 
-  https://www.figma.com/plugin-docs/plugin-quickstart-guide/
+![Flowchart to JSON Illustration](pics/header.png)
 
-This plugin template uses Typescript and NPM, two standard tools in creating JavaScript applications.
+> Note: This plugin is aimed at developers/designers working with a environment/monitor that supports a color space with a wider gamut than sRGB. Figma running in a browser is limited to sRGB currently, however the desktop app supports the option to use the native OS one. You may need to enable this in the settings under: `Figma > Preferences > Color Space > Unmanaged`.
 
-First, download Node.js which comes with NPM. This will allow you to install TypeScript and other
-libraries. You can find the download link here:
+When working in a wider color gamut (like the display of a modern macbook, supporting p3) and coping colors to be rendered on the web you may find them to look different (notably less saturated), to what you designed. While this is to some extent a invadable consequence of converting to a smaller color gamut (sRGB), as some colors simply cannot be represented there, we can do better than clipping off the values that are out of range (which undermines all deltas of colors not inside the range) as well as linearly interpolating from the respective corners of the gamut (which is not perceptually uniform) (which is what figma currently does). There are better ways of converting colors to a lower color space while respecting both concerns. The specific implementation is explained here [on colorjs.io](https://colorjs.io/docs/gamut-mapping.html). The result is not by the nature of the problem not perfect but much more sensible. Especially as we are, as of recently, not limited to sRGB anymore on the web. The new CSS Color Module Level 4 specifies the `color()` function with which we can represent colors in wider color spaces, when supported. When not supported it applies a similar (sensible) color gamut mapping algorithm than explained above. As this feature is decently new we provide a fallback sRGB representation as well. This plugin copies both representations to your clipboard, so you can paste them into your code.
 
-  https://nodejs.org/en/download/
+> Note that this plugin is currently only aimed displays/environment using the p3 color space, if you are on a different one (that is supported by [colorjs.io](https://colorjs.io/docs/spaces.html), please write me / submit a issue and I will try to make it more modular)
 
-Next, install TypeScript using the command:
+## Usage
 
-  npm install -g typescript
+Install it on the [figma community](https://www.figma.com/community/plugins) and try it out [here](https://www.figma.com/file/CB5B3pqUGaa2A4hTMEfeAv/Playground-color-gamut?type=whiteboard&node-id=0%3A1&t=pVLNRCm9OHaCRqaX-1). 
 
-Finally, in the directory of your plugin, get the latest type definitions for the plugin API by running:
+Select a any element, and run the plugin. A string like the following will be copied to your clipboard:
 
-  npm install --save-dev @figma/plugin-typings
+```css
+background: rgb(71.942% 0% 5.7326%);
+background: color(display-p3 0.6583 0.1125 0.1125);
+```
 
-If you are familiar with JavaScript, TypeScript will look very familiar. In fact, valid JavaScript code
-is already valid Typescript code.
+## Limitations
 
-TypeScript adds type annotations to variables. This allows code editors such as Visual Studio Code
-to provide information about the Figma API while you are writing code, as well as help catch bugs
-you previously didn't notice.
-
-For more information, visit https://www.typescriptlang.org/
-
-Using TypeScript requires a compiler to convert TypeScript (code.ts) into JavaScript (code.js)
-for the browser to run.
-
-We recommend writing TypeScript code using Visual Studio code:
-
-1. Download Visual Studio Code if you haven't already: https://code.visualstudio.com/.
-2. Open this directory in Visual Studio Code.
-3. Compile TypeScript to JavaScript: Run the "Terminal > Run Build Task..." menu item,
-    then select "npm: watch". You will have to do this again every time
-    you reopen Visual Studio Code.
-
-That's it! Visual Studio Code will regenerate the JavaScript file every time you save.
+Gradient fills are not supported yet. If you need them, please write me / submit a issue and I will try to add this feature.
