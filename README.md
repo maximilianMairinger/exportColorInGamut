@@ -10,7 +10,7 @@ When working in a wider color gamut (like the display of a modern macbook, suppo
 
 ## Usage
 
-Install it on the [figma community](https://www.figma.com/community/plugins) and try it out [here](https://www.figma.com/file/mxk7FRei6FQsQsLk23W94q/Color-gamut-playground?type=design&node-id=0%3A1&mode=design&t=jKFMrKU2e6eQf7YB-1). 
+Install it on the [figma community](https://www.figma.com/community/plugin/1264931204939045871) and try it out [here](https://www.figma.com/file/mxk7FRei6FQsQsLk23W94q/Color-gamut-playground?type=design&node-id=0%3A1&mode=design&t=jKFMrKU2e6eQf7YB-1). 
 
 Select a any element, and run the plugin. A string like the following will be copied to your clipboard:
 
@@ -23,4 +23,4 @@ background: color(display-p3 0.6583 0.1125 0.1125);
 
 Gradient fills and opacity are not supported yet. If you need them, please write me / submit a issue and I will try to add this feature.
 
-This plugin is intentionally only concerned with filled colors (text, strokes, background...) editable in figma. If you want to export an asset in the correct color space please refer to [Export PNG with Color Profile](https://www.figma.com/community/plugin/867977941678289774/Export-PNG-with-Color-Profile)
+This plugin is intentionally only concerned with filled colors (text, strokes, background...) editable in figma. If you want to export an asset in the correct color space please refer to [Export PNG with Color Profile](https://www.figma.com/community/plugin/867977941678289774/Export-PNG-with-Color-Profile).
