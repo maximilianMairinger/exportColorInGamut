@@ -2,6 +2,7 @@ import typescript from '@rollup/plugin-typescript';
 import resolve from '@rollup/plugin-node-resolve';
 import commonJS from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
+import babel from '@rollup/plugin-babel';
 
 
 export default {
@@ -17,6 +18,23 @@ export default {
     resolve({browser: true}),
     commonJS({
       include: 'node_modules/**',
+      
+    }),
+    babel({
+      babelHelpers: 'bundled',
+      include: 'node_modules/**',
+      
+      presets: [
+        [
+          "@babel/preset-env",
+          {
+            "targets": {
+              "esmodules": true
+            }
+          }
+        ]
+      ],
+      plugins: ["@babel/plugin-proposal-nullish-coalescing-operator"]
       
     }),
     json(),

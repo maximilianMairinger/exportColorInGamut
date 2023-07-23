@@ -1,63 +1,108 @@
-// This file holds the main code for plugins. Code in this file has access to
-// the *figma document* via the figma global object.
-// You can access browser APIs in the <script> tag inside "ui.html" which has a
-// full browser environment (See https://www.figma.com/plugin-docs/how-plugins-run).
+import gamutConversion from "clipboard-colorspace-conversion"
 
-// Runs this code if the plugin is run in Figma
-if (figma.editorType === "figma") {
-  // This plugin creates 5 rectangles on the screen.
-  const numberOfRectangles = 5;
 
-  const nodes: SceneNode[] = [];
-  for (let i = 0; i < numberOfRectangles; i++) {
-    const rect = figma.createRectangle();
-    rect.x = i * 150;
-    rect.fills = [{ type: "SOLID", color: { r: 1, g: 0.5, b: 0 } }];
-    figma.currentPage.appendChild(rect);
-    nodes.push(rect);
+
+
+const ui = {
+  log: (message: string, options: Omit<NotificationOptions, "error"> = {timeout: 2000}) => {
+    let n: NotificationHandler;
+    const prom = new Promise<NotifyDequeueReason>((res) => {
+      n = figma.notify(message, {...options, onDequeue: res});  
+    }) as Promise<NotifyDequeueReason> & {cancel: () => void}
+    prom.cancel = () => {n.cancel()}
+    return prom;
+  },
+  error: (message: string, options: Omit<NotificationOptions, "error" | "onDequeue"> = {timeout: 2000}) => {
+    let n: NotificationHandler;
+    const prom = new Promise<NotifyDequeueReason>((res) => {
+      n = figma.notify(message, {...options, error: true, onDequeue: res});  
+    }) as Promise<NotifyDequeueReason> & {cancel: () => void}
+    prom.cancel = () => {n.cancel()}
+    return prom;
   }
-  figma.currentPage.selection = nodes;
-  figma.viewport.scrollAndZoomIntoView(nodes);
+};
 
-  // Make sure to close the plugin when you're done. Otherwise the plugin will
-  // keep running, which shows the cancel button at the bottom of the screen.
-  figma.closePlugin();
-}
-// Runs this code if the plugin is run in FigJam
-if (figma.editorType === "figjam") {
-  // This plugin creates 5 shapes and 5 connectors on the screen.
-  const numberOfShapes = 5;
 
-  const nodes: SceneNode[] = [];
-  for (let i = 0; i < numberOfShapes; i++) {
-    const shape = figma.createShapeWithText();
-    // You can set shapeType to one of: 'SQUARE' | 'ELLIPSE' | 'ROUNDED_RECTANGLE' | 'DIAMOND' | 'TRIANGLE_UP' | 'TRIANGLE_DOWN' | 'PARALLELOGRAM_RIGHT' | 'PARALLELOGRAM_LEFT'
-    shape.shapeType = "ROUNDED_RECTANGLE";
-    shape.x = i * (shape.width + 200);
-    shape.fills = [{ type: "SOLID", color: { r: 1, g: 0.5, b: 0 } }];
-    figma.currentPage.appendChild(shape);
-    nodes.push(shape);
+
+
+(async () => {
+  if (figma.editorType === "figma") {
+    const selection = figma.currentPage.selection;
+    if (selection.length !== 1) {
+      await ui.error("Please select a single node as root")
+    }
+    else {
+      const elem = selection[0];
+      if ("fills" in elem && "color" in (elem as any).fills[0]) {
+        if ((elem as any).fills[0].type === "SOLID") {
+          const color = (elem as any).fills[0].color;
+          console.log(color)
+          const stringified = gamutConversion(`${color.r} ${color.g} ${color.b}`)
+          
+          await copyText(stringified)
+        }
+        else {
+          await ui.error("Please select a node with a solid fill")
+        }
+        
+      }
+      else {
+        await ui.error("Please select a node with a fill")
+      }
+    }
+    
+  }
+  // Runs this code if the plugin is run in FigJam
+  if (figma.editorType === "figjam") {
+    const selection = figma.currentPage.selection;
+
+    if (selection.length !== 1) {
+      await ui.error("Please select a single node as root")
+    }
+    else {
+      const elem = selection[0];
+      if ("fills" in elem && "color" in (elem as any).fills[0]) {
+        const color = (elem as any).fills[0].color;
+        console.log(color)
+        const stringified = gamutConversion(`${color.r} ${color.g} ${color.b}`)
+
+        
+        await copyText(stringified)
+      }
+      else {
+        await ui.error("Please select a node with a fill")
+      }
+    }
   }
 
-  for (let i = 0; i < numberOfShapes - 1; i++) {
-    const connector = figma.createConnector();
-    connector.strokeWeight = 8;
+  figma.closePlugin()
+})()
 
-    connector.connectorStart = {
-      endpointNodeId: nodes[i].id,
-      magnet: "AUTO",
-    };
 
-    connector.connectorEnd = {
-      endpointNodeId: nodes[i + 1].id,
-      magnet: "AUTO",
-    };
+
+async function copyText(stringified: string) {
+  try {
+    // open window with stringified json inside
+    figma.showUI(__html__, { themeColors: true, width: 500, height: 400 })
+    figma.ui.postMessage(stringified)
+
+    await new Promise<void>((res, rej) => {
+      // wait for message from window
+      figma.ui.onmessage = async (msg) => {
+        if (msg.type === "copy-success") {
+          figma.ui.close()
+          await ui.log("Copied to clipboard")
+          res()
+        }
+        else if (msg.type === "copy-fail") {
+          rej()
+        }
+
+        figma.closePlugin();
+      }
+    })
   }
-
-  figma.currentPage.selection = nodes;
-  figma.viewport.scrollAndZoomIntoView(nodes);
-
-  // Make sure to close the plugin when you're done. Otherwise the plugin will
-  // keep running, which shows the cancel button at the bottom of the screen.
-  figma.closePlugin();
+  catch(e) {
+    await ui.log(stringified);
+  }
 }
