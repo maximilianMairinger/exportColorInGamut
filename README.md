@@ -12,6 +12,8 @@ When working in a wider color gamut (like the display of a modern macbook, suppo
 
 Install it on the [figma community](https://www.figma.com/community/plugin/1264931204939045871) and try it out [here](https://www.figma.com/file/mxk7FRei6FQsQsLk23W94q/Color-gamut-playground?type=design&node-id=0%3A1&mode=design&t=jKFMrKU2e6eQf7YB-1). 
 
+If you want to use this as an API or CLI, please refer to [colorjs.io](https://github.com/maximilianMairinger/clipboardColorspaceConversion).
+
 Select a any element, and run the plugin. A string like the following will be copied to your clipboard:
 
 ```css
