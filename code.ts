@@ -30,6 +30,7 @@ const ui = {
     const selection = figma.currentPage.selection;
     if (selection.length !== 1) {
       await ui.error("Please select a single node as root")
+      figma.closePlugin()
     }
     else {
       const elem = selection[0];
@@ -45,6 +46,7 @@ const ui = {
           catch(e) {
             console.error(e)
             await ui.error("Failed at color gamut conversion")
+            figma.closePlugin()
           }
           
           
@@ -52,11 +54,13 @@ const ui = {
         }
         else {
           await ui.error("Please select a node with a solid fill")
+          figma.closePlugin()
         }
         
       }
       else {
         await ui.error("Please select a node with a fill")
+        figma.closePlugin()
       }
     }
     
@@ -67,6 +71,7 @@ const ui = {
 
     if (selection.length !== 1) {
       await ui.error("Please select a single node as root")
+      figma.closePlugin()
     }
     else {
       const elem = selection[0];
@@ -80,15 +85,15 @@ const ui = {
         catch(e) {
           console.error(e)
           await ui.error("Failed at color gamut conversion")
+          figma.closePlugin()
         }
       }
       else {
         await ui.error("Please select a node with a fill")
+        figma.closePlugin()
       }
     }
   }
-
-  figma.closePlugin()
 })()
 
 
