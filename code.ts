@@ -94,28 +94,23 @@ const ui = {
 
 
 async function copyText(stringified: string) {
-  try {
-    // open window with stringified json inside
-    figma.showUI(__html__, { themeColors: true, width: 500, height: 400 })
-    figma.ui.postMessage(stringified)
+  // open window with stringified json inside
+  figma.showUI(__html__, { themeColors: true, width: 500, height: 400 })
+  figma.ui.postMessage(stringified)
 
-    await new Promise<void>((res, rej) => {
-      // wait for message from window
-      figma.ui.onmessage = async (msg) => {
-        if (msg.type === "copy-success") {
-          figma.ui.close()
-          await ui.log("Copied to clipboard")
-          res()
-        }
-        else if (msg.type === "copy-fail") {
-          rej()
-        }
-
+  await new Promise<void>((res, rej) => {
+    // wait for message from window
+    // wait for message from window
+    figma.ui.onmessage = async (msg) => {
+      if (msg.type === "copy-success") {
+        figma.ui.close()
+        await ui.log("Copied to clipboard")
         figma.closePlugin();
       }
-    })
-  }
-  catch(e) {
-    await ui.log(stringified);
-  }
+      else if (msg.type === "copy-fail") {
+        await ui.error("Failed to copy to clipboard")
+        // we can leave the window open and just do nothing. When the user closes the window, the plugin will close automatically
+      }
+    }
+  })
 }

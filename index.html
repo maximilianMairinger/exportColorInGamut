@@ -89,6 +89,21 @@
 
     const appElem = document.querySelector("#app")
 
+    appElem.addEventListener("click", () => {
+      // Select everything and try to copy again
+      let success = false
+      const selection = window.getSelection()
+      const range = document.createRange()
+      range.selectNodeContents(appElem)
+      selection.removeAllRanges()
+      selection.addRange(range)
+      success = document.execCommand("copy")
+      
+      if (success) {
+        parent.postMessage({ pluginMessage: { type: 'copy-success' } }, '*')
+      }
+    })
+
     onmessage = async (event) => {
       if (event && event.data && event.data.pluginMessage) {
         const json = event.data.pluginMessage
